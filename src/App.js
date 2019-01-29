@@ -1,28 +1,61 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
+import Books from './components/list-books/list-books';
+import NavBar from './components/nav-bar/nav-bar';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    
+
+    this.handleSelected = this.handleSelected.bind(this);
+  }
+
+  handleSelected() {
+    
+    
+    this.props.history.push('/newBook');
+    
+    
+  }
+  /*
+  reset = () => {
+    this.props.onResetCounters();
+    
+  }
+  */
+
   render() {
+    console.log(this.props.listBooks);
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <div>
+          <NavBar/>
+        </div>
+      
+        <main className="App-header">
+          
+
+          <button className="App-button" onClick={() => { this.handleSelected(); }}>Add book</button>
+          
+        </main>
+        <div>
+          {this.props.listBooks.map(Book => <Books key={Book.id} id={Book.id}
+            ind={this.props.listBooks.indexOf(Book)} book={Book} />)}
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    listBooks: state.listBooks,
+  };
+};
+
+
+
+export default connect(mapStateToProps)(App);
