@@ -29,8 +29,8 @@ class Login extends Component {
 
     event.preventDefault();
     // eslint-disable-next-line react/prop-types
-    this.props.onAddUser(this.state);
-
+    this.props.onLogin(this.state.customer);
+    console.log(this.state.customer);
     this.props.history.push('/app');
 
   }
@@ -63,8 +63,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAddUser: (userLogin) => {
-      dispatch({ type: 'ADD_USER', userLogin });
+    onLogin: (newCustomer) => {
+      dispatch({ type: 'LOGIN', newCustomer });
     }
   };
 };

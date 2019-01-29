@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -12,26 +13,39 @@ import addBook from './components/add-book/add-book';
 
 
 const initialState = {
-  listBooks: [
-    {
-      id: 'f59a185b-684c-4079-81f8-f44a51fa7564',
-      name: 'Book1',
-      author: 'Alvaro'
-    },
-    {
-      id: 'f59a185b-684c-4079-81f8-f44a5fsfsfs',
-      name: 'Book2',
-      author: 'Pepe'
-    }
-
-  ],
-  userLogin: {}
+  listBooks: [ ],
+  customer: ''
 };
+
+
+
+function getLocalStorage() {
+  return JSON.parse(localStorage.getItem('counterAppData'));
+}
+
+function saveLocalStorage(newState) {
+  return localStorage.setItem('counterAppData', JSON.stringify(newState));
+}
+
+function getSessionStorage() {
+  return sessionStorage.getItem('loggedUser') || '';
+}
+
+function saveSessionStorage(username) {
+  return sessionStorage.setItem('loggedUser', username);
+}
 
 
 function reducer(state = initialState, action) {
   let newBooks=[];
   switch (action.type) {
+  case 'GET_BOOKS':
+    return Object.assign(
+      {},
+      state, {
+        listBooks: action.listBooks
+      }
+    );
   case 'ADD_BOOK':
     return Object.assign(
       {},
@@ -47,6 +61,14 @@ function reducer(state = initialState, action) {
       ...state,
       listBooks: newBooks,
     };
+  case 'LOGIN':
+    console.log('entro aquiii '+action.newCustomer);
+    return Object.assign(
+      {},
+      state, {
+        customer: action.newCustomer
+      }
+    );
     /*
       case 'INCREASE_COUNTER':
           
@@ -116,13 +138,8 @@ function reducer(state = initialState, action) {
               }
           );
 */
-  case 'ADD_USER':
-    return Object.assign(
-      {},
-      state, {
-        userLogin: action.userLogin
-      }
-    );
+  
+    
 
   case 'LOGOUT_USER':
     return Object.assign(
@@ -140,6 +157,8 @@ function reducer(state = initialState, action) {
   }
 }
 
+
+
 let store = Redux.createStore(
   reducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
@@ -151,8 +170,8 @@ ReactDOM.render(
       <React.Fragment>
         <Route exact path="/" component={Login} />
         <Route exact path="/app" component={App} />
-        <Route exact path="/details" component={Details} />
         <Route exact path="/newBook" component={addBook} />
+        <Route path='/book/:id' component={Details}></Route>
       </React.Fragment>
     </ReactRedux.Provider>
   </BrowserRouter>,

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import './App.css';
@@ -8,24 +9,35 @@ import NavBar from './components/nav-bar/nav-bar';
 class App extends Component {
   constructor(props) {
     super(props);
+
+    
     
 
     this.handleSelected = this.handleSelected.bind(this);
   }
 
+  componentDidMount(){
+    fetch('http://10.28.6.4:8080/book/', {
+  
+      method: 'GET',
+      headers: {
+        'customer': 'aramirez',
+        'Content-Type': ' application/json'
+      },
+    }).then(res => {
+      return res.json();
+    })
+      .then(listBooks => {
+        
+        this.props.onGetBooks(listBooks);
+        console.log(listBooks);
+      }).catch(err => console.log(err));
+  }
+
   handleSelected() {
-    
-    
     this.props.history.push('/newBook');
-    
-    
   }
-  /*
-  reset = () => {
-    this.props.onResetCounters();
-    
-  }
-  */
+  
 
   render() {
     console.log(this.props.listBooks);
@@ -55,7 +67,17 @@ const mapStateToProps = (state) => {
     listBooks: state.listBooks,
   };
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetBooks: (listBooks) => {
+      dispatch({ type: 'GET_BOOKS' , listBooks});
+    },
+    onResetCounters: () => {
+      dispatch({type: 'RESET_COUNTERS'});
+    }
+  };
+};
 
 
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

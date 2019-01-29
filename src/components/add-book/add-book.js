@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -33,11 +35,22 @@ class NewBook extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState(({ id }) => ({
-      id: +new Date(),
+    
 
-    }));
-    this.props.onAddBook(this.state);
+    fetch('http://10.28.6.4:8080/book/', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json', 'customer': 'aramirez'},
+      body:JSON.stringify({
+        name: this.state.name,
+        author: this.state.author
+      })
+    })
+      .then((res) => res.json())
+      .then((data) =>  console.log(data))
+      .catch((err)=>console.log(err));
+
+    this.props.history.push('/app');
+    //this.props.onAddBook(this.state);
   }
 
   
@@ -66,7 +79,7 @@ const mapDispatchToProps = (dispatch, props) => {
   return {
     onAddBook: (newBook) => {
       dispatch({ type: 'ADD_BOOK', newBook});
-      props.history.push('/app');
+      
     }
   };
 };
