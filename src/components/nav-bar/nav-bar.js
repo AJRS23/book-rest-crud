@@ -7,6 +7,10 @@ import {withRouter} from 'react-router-dom';
 
 
 class NavBar extends Component {
+  constructor(props) {
+    super(props);
+
+  }
 
   handleSelected() {
     
@@ -16,12 +20,13 @@ class NavBar extends Component {
   }
 
   render() {
-
+    console.log(this.props.customer);
     return (
+      
       <header>
         <nav className="navBar">
           <ul>
-            <li>Welcome {this.props.userLogin.name}</li>
+            <li>Welcome {this.props.customer}</li>
             <li><button onClick={() => { this.handleSelected(); }}>Logout</button></li>
           </ul>
         </nav>
@@ -31,7 +36,7 @@ class NavBar extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    userLogin: state.userLogin,
+    customer: state.customer,
   };
 };
 
@@ -45,7 +50,8 @@ const mapDispatchToProps = (dispatch) => {
 
 NavBar.propTypes = {
   userLogin: PropTypes.string,
-  history: PropTypes.object
+  history: PropTypes.object,
+  customer: PropTypes.string
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));
