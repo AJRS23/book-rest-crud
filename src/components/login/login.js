@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,30 +11,44 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { name: '',customer:'' };
+    this.state = { username: '',password:'' };
 
     this.handleChange = this.handleChange.bind(this);
-    this.customerChange = this.customerChange.bind(this);
+    this.passwordChange = this.passwordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
   }
 
   handleChange(event) {
-    this.setState({ name: event.target.value });
+    this.setState({ username: event.target.value });
   }
 
-  customerChange(event) {
-    this.setState({ customer: event.target.value });
+  passwordChange(event) {
+    this.setState({ password: event.target.value });
   }
 
   handleSubmit(event) {
-
+    console.log(this.state.username + this.state.password) ;
     event.preventDefault();
-    // eslint-disable-next-line react/prop-types
-    this.props.onLogin(this.state.customer);
-    console.log(this.state.customer);
-    this.props.history.push('/app');
+    fetch('http://10.28.6.4:8080/v2/user/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body:JSON.stringify({
 
+        username: this.state.username,
+        password: this.state.password
+      })
+    })
+      .then((res) => res.json())
+      .then((data) => { 
+        localStorage.setItem('auth-token', JSON.stringify(data.token));
+        localStorage.setItem('username', JSON.stringify(data.username));
+        console.log(JSON.parse(localStorage.getItem('auth-token')));
+        this.props.onLogin();
+        this.props.history.push('/app');
+      })
+      .catch((err)=>console.log(err));
+    
   }
 
 
@@ -43,13 +59,13 @@ class Login extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
                     Username:
-            <input type="text" value={this.state.name} onChange={this.handleChange} />
+            <input type="text" value={this.state.username} onChange={this.handleChange} />
           </label>
           <label>
-                    Customer:
-            <input type="text" value={this.state.customer} onChange={this.customerChange} />
+                    Password:
+            <input type="password" value={this.state.password} onChange={this.passwordChange} />
           </label>
-          <input type="submit" value="Submit" disabled={this.state.name === ''} />
+          <input type="submit" value="Submit" disabled={this.state.username === ''} />
         </form>
       </div>
     );
@@ -63,8 +79,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLogin: (newCustomer) => {
-      dispatch({ type: 'LOGIN', newCustomer });
+    onLogin: () => {
+      dispatch({ type: 'LOGIN'});
     }
   };
 };

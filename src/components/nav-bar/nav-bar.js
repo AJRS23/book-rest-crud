@@ -5,7 +5,6 @@ import './nav-bar.css';
 import {withRouter} from 'react-router-dom';
 
 
-
 class NavBar extends Component {
   constructor(props) {
     super(props);
@@ -15,23 +14,25 @@ class NavBar extends Component {
   handleSelected() {
     
     // eslint-disable-next-line react/prop-types
-    this.props.onDeleteUser();
+    localStorage.clear();
+    this.props.onLogout();
     this.props.history.push('/');
   }
 
   render() {
-    console.log(this.props.customer);
+    
     return (
       
       <header>
         <nav className="navBar">
           <ul>
-            <li>Welcome {this.props.customer}</li>
+            <li>Welcome {JSON.parse(localStorage.getItem('username'))}</li>
             <li><button onClick={() => { this.handleSelected(); }}>Logout</button></li>
           </ul>
         </nav>
       </header>
     );
+    
   }
 }
 const mapStateToProps = (state) => {
@@ -42,8 +43,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onDeleteUser: () => {
-      dispatch({ type: 'DELETE_USER' });
+    onLogout: () => {
+      dispatch({ type: 'LOGOUT_USER' });
     }
   };
 };
