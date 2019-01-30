@@ -13,7 +13,7 @@ class NewBook extends Component {
     this.state = {
       id: 0,
       name: '',
-      author: '',
+      author: ''
     };
 
     this.onNameChange = this.onNameChange.bind(this);
@@ -21,7 +21,7 @@ class NewBook extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     
   }
-
+  
   onNameChange(event) {
     this.setState({
       name: event.target.value
@@ -35,25 +35,28 @@ class NewBook extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    
 
-    fetch('http://10.28.6.4:8080/book/', {
+    fetch('http://10.28.6.4:8080/v2/book/', {
       method: 'POST',
-      headers: {'Content-Type':'application/json', 'customer': 'aramirez'},
+      headers: {'Content-Type':'application/json', 
+        'auth-token': JSON.parse(localStorage.getItem('auth-token'))},
+
       body:JSON.stringify({
         name: this.state.name,
         author: this.state.author
       })
     })
       .then((res) => res.json())
-      .then((data) =>  console.log(data))
+      .then((data) =>  
+      {
+        this.props.onRenewToken();
+        console.log(data);
+      })
       .catch((err)=>console.log(err));
 
     this.props.history.push('/app');
     //this.props.onAddBook(this.state);
   }
-
-  
 
   render() {
     return (
@@ -79,6 +82,10 @@ const mapDispatchToProps = (dispatch, props) => {
   return {
     onAddBook: (newBook) => {
       dispatch({ type: 'ADD_BOOK', newBook});
+      
+    },
+    onRenewToken: () => {
+      dispatch({ type: 'RENEW_TOKEN'});
       
     }
   };

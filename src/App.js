@@ -5,33 +5,41 @@ import './App.css';
 import { connect } from 'react-redux';
 import Books from './components/list-books/list-books';
 import NavBar from './components/nav-bar/nav-bar';
+import {withRouter} from 'react-router-dom';
 
 class App extends Component {
   constructor(props) {
-    super(props);
-
-    
-    
+    super(props); 
 
     this.handleSelected = this.handleSelected.bind(this);
   }
 
   componentDidMount(){
-    fetch('http://10.28.6.4:8080/book/', {
+    
+    if(localStorage.getItem('auth-token')){
+      
+      fetch('http://10.28.6.4:8080/v2/book/', {
   
-      method: 'GET',
-      headers: {
-        'customer': 'aramirez',
-        'Content-Type': ' application/json'
-      },
-    }).then(res => {
-      return res.json();
-    })
-      .then(listBooks => {
+        method: 'GET',
+        headers: {
+          'auth-token': JSON.parse(localStorage.getItem('auth-token')),
+          'Content-Type': ' application/json'
+        },
+      }).then(res => {
+        return res.json();
+      })
+        .then(listBooks => {
         
-        this.props.onGetBooks(listBooks);
-        console.log(listBooks);
-      }).catch(err => console.log(err));
+          this.props.onGetBooks(listBooks);
+          console.log(listBooks);
+        }).catch(err => {
+          this.props.history.push('/');
+          console.log(err);
+        });
+    }
+    else{
+      this.props.history.push('/');
+    }
   }
 
   handleSelected() {
@@ -46,12 +54,10 @@ class App extends Component {
         <div>
           <NavBar/>
         </div>
-      
         <main className="App-header">
-          
-
+        
           <button className="App-button" onClick={() => { this.handleSelected(); }}>Add book</button>
-          
+
         </main>
         <div>
           {this.props.listBooks.map(Book => <Books key={Book.id} id={Book.id}
@@ -72,12 +78,13 @@ const mapDispatchToProps = (dispatch) => {
     onGetBooks: (listBooks) => {
       dispatch({ type: 'GET_BOOKS' , listBooks});
     },
-    onResetCounters: () => {
-      dispatch({type: 'RESET_COUNTERS'});
+    onRenewToken: () => {
+      dispatch({ type: 'RENEW_TOKEN'});
+      
     }
   };
 };
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

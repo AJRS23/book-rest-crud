@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import { BrowserRouter, Route} from 'react-router';
+
 import '../../App.css';
 
 
@@ -16,11 +16,11 @@ class Details extends Component {
   componentDidMount () {
     const { id } = this.props.match.params;
 
-    fetch(`http://10.28.6.4:8080/book/${id}`, {
+    fetch(`http://10.28.6.4:8080/v2/book/${id}`, {
   
       method: 'GET',
       headers: {
-        'customer': 'aramirez',
+        'auth-token': JSON.parse(localStorage.getItem('auth-token')),
         'Content-Type': ' application/json'
       },
     }).then(res => {
@@ -34,6 +34,7 @@ class Details extends Component {
         });
       }).catch(err => console.log(err));
   }
+
   render() {
     
     
@@ -42,8 +43,9 @@ class Details extends Component {
       <div className="details">
           
         <div className="details__books-list">
-          {this.state.name} 
-          {this.state.author}
+          Name: {this.state.name} 
+          <br/>
+          Author: {this.state.author}
            
         </div>
       </div>      
