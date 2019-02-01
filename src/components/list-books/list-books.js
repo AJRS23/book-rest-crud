@@ -17,7 +17,7 @@ class CounterContainer extends Component {
    
 
   handleSelected(idBook, indBook) {
-    fetch('http://10.28.6.4:8080/v2/book/' + '/' + idBook, {
+    fetch('http://localhost:8080/v2/book' + '/' + idBook, {
       method: 'DELETE',
       headers: {'Content-Type':'application/json', 
         'auth-token': JSON.parse(localStorage.getItem('auth-token'))}
@@ -30,6 +30,7 @@ class CounterContainer extends Component {
       .catch((err)=>console.log(err));
   
   }
+
   details = () => {
     this.props.history.push('/details');
   
