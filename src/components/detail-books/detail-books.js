@@ -16,7 +16,7 @@ class Details extends Component {
   componentDidMount () {
     const { id } = this.props.match.params;
 
-    fetch(`http://10.28.6.4:8080/v2/book/${id}`, {
+    fetch(`http://localhost:8080/v2/book/${id}`, {
   
       method: 'GET',
       headers: {
@@ -32,7 +32,11 @@ class Details extends Component {
           author: book.author,
           name: book.name
         });
-      }).catch(err => console.log(err));
+      }).catch(err => 
+      {
+        this.props.history.push('/');
+        console.log(err);
+      });
   }
 
   render() {

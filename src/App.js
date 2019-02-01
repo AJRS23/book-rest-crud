@@ -18,7 +18,7 @@ class App extends Component {
     
     if(localStorage.getItem('auth-token')){
       
-      fetch('http://10.28.6.4:8080/v2/book/', {
+      fetch('http://localhost:8080/v2/book/', {
   
         method: 'GET',
         headers: {
@@ -29,7 +29,7 @@ class App extends Component {
         return res.json();
       })
         .then(listBooks => {
-        
+          console.log(listBooks);
           this.props.onGetBooks(listBooks);
           console.log(listBooks);
         }).catch(err => {
@@ -43,6 +43,7 @@ class App extends Component {
   }
 
   handleSelected() {
+    
     this.props.history.push('/newBook');
   }
   

@@ -66,7 +66,7 @@ function reducer(state = initialState, action) {
     );
 
   case 'RENEW_TOKEN':
-    fetch('http://10.28.6.4:8080/v2/user/renew', {
+    fetch('http://localhost:8080/v2/user/renew', {
       method: 'POST',
       headers: { 
         'auth-token': JSON.parse(localStorage.getItem('auth-token'))},

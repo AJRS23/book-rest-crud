@@ -36,7 +36,7 @@ class NewBook extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    fetch('http://10.28.6.4:8080/v2/book/', {
+    fetch('http://localhost:8080/v2/book/', {
       method: 'POST',
       headers: {'Content-Type':'application/json', 
         'auth-token': JSON.parse(localStorage.getItem('auth-token'))},
